@@ -14,16 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import by.nikolajuk.spring.dao.PersonDAO;
 import by.nikolajuk.spring.models.Person;
+import by.nikolajuk.spring.util.PersonValidator;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
+
 	private final PersonDAO personDAO;
+	private final PersonValidator personValidator;
 
 	@Autowired
-	public PeopleController(PersonDAO personDAO) {
+	public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
 		this.personDAO = personDAO;
+		this.personValidator = personValidator;
 	}
 
 	@GetMapping()
@@ -45,6 +49,9 @@ public class PeopleController {
 
 	@PostMapping()
 	public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+
+		personValidator.validate(person, bindingResult);
+
 		if (bindingResult.hasErrors())
 			return "people/new";
 
@@ -59,13 +66,16 @@ public class PeopleController {
 	}
 
 	@PatchMapping("/{id}")
-	 public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
-				@PathVariable("id") int id) {
-			if (bindingResult.hasErrors())
-				return "people/edit";
+	public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
+			@PathVariable("id") int id) {
 
-			personDAO.update(id, person);
-			return "redirect:/people";
+		personValidator.validate(person, bindingResult);
+
+		if (bindingResult.hasErrors())
+			return "people/edit";
+
+		personDAO.update(id, person);
+		return "redirect:/people";
 	}
 
 	@DeleteMapping("/{id}")
