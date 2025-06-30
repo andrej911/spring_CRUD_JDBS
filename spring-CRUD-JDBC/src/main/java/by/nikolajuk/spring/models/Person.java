@@ -22,7 +22,7 @@ public class Person {
 	    private String email;
 	    
 	    // Страна, Город, Индекс(6 цифр)
-	    @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}", message ="Your address should be in this format: Coutry, City, Postal Code (6 digits)" )
+	    @Pattern(regexp = "[A-Z]\\w+, [A-Z]\\w+, \\d{6}", message ="Your address should be in this format: Country, City, Postal Code (6 digits)" )
 	    private String address;
 
 	    public Person() {
