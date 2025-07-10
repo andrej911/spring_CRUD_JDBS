@@ -24,14 +24,13 @@ public class PersonValidator implements Validator {
 		return Person.class.equals(aClass);
 	}
 
-	@Override
+	@Override 
 	public void validate(Object o, Errors errors) {
 		Person person = (Person) o;
 
-		if (personDAO.show(person.getEmail()).isPresent())
-			errors.rejectValue("email", "", "This email is already taken");
+		if (personDAO.getPersonByFullName(person.getFullName()).isPresent())
+			errors.rejectValue("fullName", "", "Человек с таким ФИО уже существует");
 
-		// посмотреьт, есть ли человек с таким email в БД
 	}
 
 }
